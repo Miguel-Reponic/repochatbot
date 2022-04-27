@@ -3,6 +3,7 @@ from flask import Flask, request
 import os
 from twilio.rest import Client
 from dotenv import load_dotenv
+import sys
 from twilio.twiml.messaging_response import Message, MessagingResponse
 
 load_dotenv()
@@ -16,21 +17,19 @@ client = Client(account_sid, auth_token)
 @app.route('/bot', methods=['GET','POST'])
 def bot():
     incoming_msg = request.values.get('Body', '').lower()
-    # if 'hours' in incoming_msg:
-    #     # return a quote
-    #     msg.body('This is hours')
-    #     responded = True
-    # if 'services' in incoming_msg:
-    #     # return a cat pic
-    #     msg.body('This is services')
-    #     responded = True
-    # if not responded:
-    print('Hello world!', file=sys.stderr)
-    response = 'I only know about famous quotes and cats, sorry!'
-    resp = MessagingResponse()
-    resp.message(response)
-    # responded = False
-    return str(resp)
+    From = request.values.get('From', '').lower()
+    print(request.values)
+
+    print(incoming_msg)
+
+    message = client.messages.create(
+                                body='Hello there!',
+                                from_='whatsapp:+14155238886',
+                                to=From
+                            )
+
+    print(message.sid)
+    return str(message) 
 
 
 @app.route('/test', methods=['POST'])
